@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MiniCrm.Core.Data.Persistence.Users.Configuration
+namespace MiniCrm.Core.Enums
 {
-    public class RoleConfiguration
+    public enum RoleType
     {
+        IsUser = 1,
+        IsAdmin,
+        IsSuperAdmin
     }
 }

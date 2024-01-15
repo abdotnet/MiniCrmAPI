@@ -4,19 +4,20 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Batch;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OData.Edm;
 using MiniCrm.Api.Filters;
 using MiniCrm.Core.Data;
 using MiniCrm.Core.Data.Persistence;
+using MiniCrm.Core.Interfaces;
 using MiniCrm.Core.Interfaces.Integrations.sms;
 using MiniCrm.Core.Models;
 using MiniCrm.Core.Providers;
 using MiniCrm.Infrastructure.Auth;
-using MiniCrm.Infrastructure.Helpers;
+using MiniCrm.Infrastructure.InfraHelpers;
 using MiniCrm.Infrastructure.Integrations.Email;
 using MiniCrm.Infrastructure.Integrations.Sms;
+using MiniCrm.Infrastructure.Services;
 using PiiTypes;
 using Quartz;
 using Quartz.AspNetCore;
@@ -30,10 +31,11 @@ namespace MiniCrm.Api.Extension
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddSharedInfrastructure(this IServiceCollection services,
-      IConfiguration configuration, string serviceName, string buildVersion,
-      string[] activitySources, string[] metricSources
+      IConfiguration configuration, string serviceName
   )
         {
+            //string buildVersion,
+           // string[] activitySources, string[] metricSources
             services
                 //.AddAllAuth(configuration)
                 .AddAuthorization()
@@ -41,6 +43,7 @@ namespace MiniCrm.Api.Extension
                 .AddSingleton<IAuthorizationHandler, PermissionHandler>()
                  .AddSingleton<ISmsService, SmsService>()
                   .AddSingleton<IEmailService, EmailService>()
+                  .AddSingleton<IUserService, UserService>()
                 // Overrides the DefaultAuthorizationPolicyProvider with our own
                 .AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>()
                 .AddSingleton(FrontEndUrlHelper.Create(configuration.GetValue<string>("CLIENT_URL")
@@ -51,6 +54,18 @@ namespace MiniCrm.Api.Extension
                     manager.FeatureProviders.Add(new InternalControllerFeatureProvider()));
 
             services.Configure<SmsSettings>(configuration.GetSection("SmsConfig"));
+            return services;
+        }
+
+        public static IServiceCollection AddModuleDbContext<TDbContext, TIDbContext>(
+    this IServiceCollection services,
+    IConfiguration configuration,
+    string sectionName = "Default")
+    where TDbContext : ModuleDbContext<TDbContext>, TIDbContext
+        {
+            services.AddModuleDbContext<TDbContext>(configuration, sectionName)
+                .AddScoped(typeof(TIDbContext), provider => provider.GetRequiredService<TDbContext>());
+
             return services;
         }
 
@@ -93,17 +108,7 @@ namespace MiniCrm.Api.Extension
             return services;
         }
 
-        public static IServiceCollection AddModuleDbContext<TDbContext, TIDbContext>(
-        this IServiceCollection services,
-        IConfiguration configuration,
-        string sectionName = "Default")
-        where TDbContext : ModuleDbContext<TDbContext>, TIDbContext
-        {
-            services.AddModuleDbContext<TDbContext>(configuration, sectionName)
-                .AddScoped(typeof(TIDbContext), provider => provider.GetRequiredService<TDbContext>());
-
-            return services;
-        }
+    
         private static IServiceCollection AddModuleDbContext<TDbContext>(this IServiceCollection services,
         IConfiguration configuration,
         string sectionName = "Default") where TDbContext : ModuleDbContext<TDbContext>

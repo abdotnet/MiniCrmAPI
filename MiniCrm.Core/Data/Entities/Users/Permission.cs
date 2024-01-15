@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MiniCrm.Core.Data.Entities.Users
 {
-    public class Permission
+    public class Permission : BaseEntity
     {
         public long Id { get; set; }
         public required string Name { get; set; }

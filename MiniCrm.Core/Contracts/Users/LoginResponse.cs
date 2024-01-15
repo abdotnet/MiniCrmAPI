@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MiniCrm.Core.Data.Persistence.Users.Configuration
+namespace MiniCrm.Core.Contracts.Users
 {
-    public class RoleConfiguration
+    public class LoginResponse
     {
     }
 }

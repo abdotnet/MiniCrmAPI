@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MiniCrm.Core.Data.Entities.Users
 {
-    public class UserRole
+    public class UserRole : BaseEntity
     {
         public long Id { get; set; }
         public long UserId { get; set; }

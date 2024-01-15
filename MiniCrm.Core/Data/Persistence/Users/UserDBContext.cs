@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MiniCrm.Core.Data.Entities.Users;
+using MiniCrm.Core.Interfaces.DbContext;
 using MiniCrm.Core.Utility;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MiniCrm.Core.Data.Persistence.Users
 {
-    public sealed class UserDBContext : ModuleDbContext<UserDBContext>
+    public sealed class UserDBContext : ModuleDbContext<UserDBContext>, IUserDbContext
     {
         public UserDBContext(DbContextOptions<UserDBContext> options) : base(options)
         {

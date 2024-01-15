@@ -11,6 +11,7 @@ namespace MiniCrm.Core.Utility
     public class Constants
     {
         public const string UserDbSchema = "user";
+        public const string DefaultPassword = "@Password1";
     }
     public partial class ThisAssembly
     {

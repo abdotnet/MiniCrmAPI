@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.WebUtilities;
 using MiniCrm.Core.Interfaces;
 
-namespace MiniCrm.Infrastructure.Helpers
+namespace MiniCrm.Infrastructure.InfraHelpers
 {
     public sealed class FrontEndUrlHelper : IFrontEndUrlHelper
     {
